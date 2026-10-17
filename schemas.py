@@ -131,7 +131,7 @@ class CareerPath(BaseModel):
     recommended_skills_to_learn: List[SkillRecommendation] = Field(description="Key skills to bridge the gap")
 
 class CareerAnalysisReport(BaseModel):
-    personality_archetype: str = Field(description="A concise archetypal title (e.g., 'The Strategic Innovator')")
+    personality_archetype: str = Field(description="A memorable, concise, non-clinical personality type name grounded in the user's Big Five traits and work preferences (e.g., 'The Strategic Innovator')")
     personality_summary: str = Field(description="Comprehensive synthesis of their behavioral and cognitive traits")
     core_strengths: List[str] = Field(description="Top 3 to 5 superpower traits")
     blind_spots: List[str] = Field(description="Potential blind spots to watch out for")

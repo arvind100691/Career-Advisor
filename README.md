@@ -97,6 +97,8 @@ The Big Five section asks how much the following statements describe the respond
 
 The app calculates each trait's average on a 1–5 scale. It reverse-scores “I am quiet around strangers” for extraversion, “I feel little concern for others” for agreeableness, and the first four emotional-stability statements. Higher emotional-stability scores therefore mean fewer reported stress/worry reactions and greater reported calm.
 
+Every rating and written question includes a help hint. The report's named personality type is a brief, non-clinical description derived from the Big Five self-ratings and work preferences; it is not a separate fixed personality test or diagnosis. Live reports receive the calculated trait scores and individual answers, while the demo report derives its archetype from the highest-scoring trait.
+
 ### Step 2: Behavioral patterns and decisions
 
 Respondents are asked:
@@ -129,7 +131,7 @@ The app sends the collected profile to the configured model and displays the res
 
 The structured report includes:
 
-- A personality archetype and summary.
+- A named personality type (archetype) and summary based on the self-reported profile.
 - Core strengths and potential blind spots.
 - Career paths with 0–100 fit scores.
 - Reasons each path fits the respondent's personality and skills.

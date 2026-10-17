@@ -34,6 +34,20 @@ def get_model_name() -> str:
     return os.getenv("OPENAI_MODEL") or os.getenv("ANTHROPIC_MODEL", "gpt-4o-mini")
 
 
+def _personality_archetype(scores: dict[str, float]) -> str:
+    archetypes = {
+        "openness": "The Curious Explorer",
+        "conscientiousness": "The Intentional Builder",
+        "extraversion": "The Social Connector",
+        "agreeableness": "The Considerate Collaborator",
+        "emotional_stability": "The Steady Navigator",
+    }
+    leading_trait = max(scores, key=scores.get)
+    if scores[leading_trait] < 3.5:
+        return "The Balanced Generalist"
+    return archetypes[leading_trait]
+
+
 def test_api_connection() -> str:
     client = get_openai_client()
     if client is None:
@@ -57,13 +71,25 @@ def test_api_connection() -> str:
 def generate_mock_report(profile: UserProfilePayload) -> CareerAnalysisReport:
     """Generates a realistic mock report when no API key is provided, enabling instant prototype demonstration."""
     skills_preview = ", ".join(profile.skills_and_goals.top_skills[:3]) if profile.skills_and_goals.top_skills else "problem solving"
+    big_five_scores = profile.big_five.trait_scores()
+    leading_trait = max(big_five_scores, key=big_five_scores.get)
+    personality_signal = (
+        f"Your {leading_trait.replace('_', ' ')} is your highest relative Big Five trait "
+        f"({big_five_scores[leading_trait]:.1f}/5)."
+    )
+    personality_summary = ", ".join(
+        f"{trait.replace('_', ' ')} {score:.1f}/5"
+        for trait, score in big_five_scores.items()
+    )
     
     return CareerAnalysisReport(
-        personality_archetype="The Pragmatic Systems Builder",
+        personality_archetype=_personality_archetype(big_five_scores),
         personality_summary=(
-            f"You combine deliberate decision-making with a focus on tangible impact. "
-            f"With analytical-creative balance at {profile.psychometrics.analytical_vs_creative}/5 and a preference "
-            f"for structured autonomy, you thrive where complex chaos can be organized into repeatable systems."
+            f"Your Big Five self-ratings are: {personality_summary}. "
+            f"{personality_signal} "
+            f"Alongside an analytical-to-creative preference of {profile.psychometrics.analytical_vs_creative}/5, "
+            "these broad tendencies can help identify work environments to explore; they are not a diagnosis "
+            "or a fixed description of who you are."
         ),
         core_strengths=[
             "High accountability in ambiguous environments",
@@ -78,7 +104,7 @@ def generate_mock_report(profile: UserProfilePayload) -> CareerAnalysisReport:
             CareerPath(
                 role_title="Technical Product Manager / Systems Strategist",
                 fit_score=92,
-                why_it_fits_personality="Balances structured requirements with cross-functional leadership, matching your behavioral tendencies.",
+                why_it_fits_personality=f"Balances structured requirements with cross-functional leadership. {personality_signal}",
                 why_it_fits_skills=f"Directly leverages your background in {skills_preview} while giving room to steer high-level product strategy.",
                 potential_challenges="Requires managing executive stakeholder conflict without formal authority.",
                 recommended_skills_to_learn=[
@@ -97,7 +123,7 @@ def generate_mock_report(profile: UserProfilePayload) -> CareerAnalysisReport:
             CareerPath(
                 role_title="Operations & Solutions Architect",
                 fit_score=88,
-                why_it_fits_personality="Thrives on optimizing workflows, aligning with your high structure preference and pragmatic decision-making.",
+                why_it_fits_personality=f"Can suit a preference for clear systems and workflow improvement. {personality_signal}",
                 why_it_fits_skills=f"Applies your skills in {skills_preview} to eliminate organizational bottlenecks.",
                 potential_challenges="Can sometimes feel reactive if leadership priorities shift rapidly.",
                 recommended_skills_to_learn=[
@@ -111,7 +137,7 @@ def generate_mock_report(profile: UserProfilePayload) -> CareerAnalysisReport:
             CareerPath(
                 role_title="Specialized Technical Consultant / Advisor",
                 fit_score=84,
-                why_it_fits_personality="Offers autonomy, project variety, and continuous learning suited for high curiosity.",
+                why_it_fits_personality=f"Offers autonomy, project variety, and continuous learning. {personality_signal}",
                 why_it_fits_skills="Allows monetizing your deepest core skills across multiple industry verticals.",
                 potential_challenges="Requires proactive client pipeline management and handling variable scopes.",
                 recommended_skills_to_learn=[

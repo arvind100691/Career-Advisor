@@ -201,13 +201,14 @@ if st.session_state.step == 1:
                 value=st.session_state.user_data["psychometrics"]["analytical_vs_creative"],
                 help="1 = Highly Analytical/Data-driven | 5 = Highly Creative/Intuitive"
             )
-            st.caption("1: Data & Logic  ⟵  ⟶  5: Art & Intuition")
+            st.caption("Choose how you usually approach ideas: 1 favors evidence, data, and logical analysis; 5 favors imagination, intuition, and creative exploration.")
             task_approach_check = st.slider(
                 "When solving a new problem, which approach sounds more like you?",
                 min_value=1, max_value=5,
                 value=st.session_state.user_data["psychometrics"]["task_approach_check"],
                 help="1 = Start with evidence and analysis | 5 = Explore ideas and experiment"
             )
+            st.caption("Think about your first instinct with an unfamiliar challenge: 1 means investigate evidence before acting; 5 means generate possibilities and learn by experimenting.")
 
             independent_vs_collaborative = st.slider(
                 "Social Workstyle",
@@ -215,13 +216,14 @@ if st.session_state.step == 1:
                 value=st.session_state.user_data["psychometrics"]["independent_vs_collaborative"],
                 help="1 = Deep solo focus | 5 = Highly collaborative team setting"
             )
-            st.caption("1: Solo Contributor  ⟵  ⟶  5: Constant Collaboration")
+            st.caption("Rate the amount of interaction that suits you: 1 means you do your best work independently; 5 means you prefer frequent discussion and shared work.")
             workday_collaboration_check = st.slider(
                 "In a typical week, how much do you prefer working with others?",
                 min_value=1, max_value=5,
                 value=st.session_state.user_data["psychometrics"]["workday_collaboration_check"],
                 help="1 = Mostly independent focus | 5 = Frequent teamwork and discussion"
             )
+            st.caption("Picture an ordinary workweek, not a special project: 1 means mostly uninterrupted solo time; 5 means regular teamwork, meetings, and collaboration.")
 
             risk_tolerance = st.slider(
                 "Risk vs Stability",
@@ -229,13 +231,14 @@ if st.session_state.step == 1:
                 value=st.session_state.user_data["psychometrics"]["risk_tolerance"],
                 help="1 = High stability & predictability | 5 = High risk, experimentation & volatility"
             )
-            st.caption("1: Stable & Predictable  ⟵  ⟶  5: Experimental & High Upside")
+            st.caption("Consider how comfortable you are with uncertainty in work or career choices: 1 favors dependable outcomes; 5 is comfortable with uncertainty for a chance at greater upside.")
             career_risk_check = st.slider(
                 "Which job opportunity would you be more comfortable choosing?",
                 min_value=1, max_value=5,
                 value=st.session_state.user_data["psychometrics"]["career_risk_check"],
                 help="1 = Secure and predictable | 5 = Uncertain but with greater potential upside"
             )
+            st.caption("Compare a secure, predictable opportunity with one that is less certain but may offer greater growth: 1 favors security; 5 favors potential upside.")
 
         with c2:
             structure_preference = st.slider(
@@ -244,13 +247,14 @@ if st.session_state.step == 1:
                 value=st.session_state.user_data["psychometrics"]["structure_preference"],
                 help="1 = Emergent, fluid, ambiguous | 5 = Clear systems, procedures & structure"
             )
-            st.caption("1: Fluid / Ambiguous  ⟵  ⟶  5: Rigorous Process")
+            st.caption("Rate how much structure helps you work well: 1 prefers flexibility and figuring things out as you go; 5 prefers clear procedures, plans, and expectations.")
             work_structure_check = st.slider(
                 "Do you prefer deciding how to do the work yourself or following clear steps?",
                 min_value=1, max_value=5,
                 value=st.session_state.user_data["psychometrics"]["work_structure_check"],
                 help="1 = Flexible approach | 5 = Clear process and defined steps"
             )
+            st.caption("Think about how you like tasks to be set up: 1 means choosing your own method; 5 means having an agreed process and defined steps.")
 
             leadership_drive = st.slider(
                 "Influence & Leadership",
@@ -258,13 +262,14 @@ if st.session_state.step == 1:
                 value=st.session_state.user_data["psychometrics"]["leadership_drive"],
                 help="1 = Craft specialist | 5 = Leading, coordinating and steering teams"
             )
-            st.caption("1: Craft Specialist  ⟵  ⟶  5: Team Leadership")
+            st.caption("Rate the kind of contribution you want: 1 focuses on developing expertise and delivering your own work; 5 focuses on guiding people and setting direction.")
             role_influence_check = st.slider(
                 "Which role would feel more satisfying to you?",
                 min_value=1, max_value=5,
                 value=st.session_state.user_data["psychometrics"]["role_influence_check"],
                 help="1 = Focus on your own specialist work | 5 = Set direction and coordinate others"
             )
+            st.caption("Imagine choosing between deep specialist work and coordinating others toward shared goals: 1 favors specialist contribution; 5 favors setting direction.")
 
         st.markdown("### Big Five Personality Test")
         st.write(
@@ -281,6 +286,20 @@ if st.session_state.step == 1:
                         options=[1, 2, 3, 4, 5],
                         value=st.session_state.user_data["big_five"][trait][index],
                         key=f"big_five_{trait}_{index}",
+                        help=(
+                            "Rate how well this describes your usual behavior across situations, "
+                            "rather than only one recent experience."
+                            + (
+                                " This statement is phrased in the opposite direction; answer based "
+                                "on how accurately it describes you."
+                                if (
+                                    (trait == "extraversion" and index == 4)
+                                    or (trait == "agreeableness" and index == 4)
+                                    or (trait == "emotional_stability" and index < 4)
+                                )
+                                else ""
+                            )
+                        ),
                     )
                     for index, statement in enumerate(section["items"])
                 ]
@@ -316,42 +335,48 @@ elif st.session_state.step == 2:
             "How do you make important decisions when you don't have all the facts?",
             value=st.session_state.user_data["behavioral"]["decision_making_style"],
             placeholder="e.g., I gather as much data as possible, consult 2-3 trusted peers, but if time runs out, I trust my gut and iterate quickly...",
-            height=100
+            height=100,
+            help="Describe how you handle uncertainty, what information or advice you seek, and how you decide when time is limited.",
         )
 
         conflict_resolution = st.text_area(
             "How do you typically handle conflict or pushback at work?",
             value=st.session_state.user_data["behavioral"]["conflict_resolution"],
             placeholder="e.g., I step back to understand their core concern, decouple emotion from logic, and seek a compromise based on shared objectives...",
-            height=100
+            height=100,
+            help="Think of the steps you usually take, how you communicate, and what outcome you aim for.",
         )
 
         intrinsic_motivation = st.text_area(
             "What activities give you energy, and what tasks drain you the fastest?",
             value=st.session_state.user_data["behavioral"]["intrinsic_motivation"],
             placeholder="e.g., Energized by: architectural problem solving, designing systems, mentoring. Drained by: repetitive bureaucracy and ambiguous meetings without agendas...",
-            height=100
+            height=100,
+            help="Name specific work activities, environments, or interactions that leave you more or less energized.",
         )
 
         past_job_choice = st.text_area(
             "Think of a past job or education choice. Did you accept the first suitable offer, or compare several options before choosing? What influenced you?",
             value=st.session_state.user_data["behavioral"]["past_job_choice"],
             placeholder="For example: I accepted my first offer because stability mattered then, or I compared several roles for growth, pay, and team fit...",
-            height=100
+            height=100,
+            help="Describe the options you considered, the factors that mattered at the time, and what ultimately decided it.",
         )
 
         compensation_lifestyle_tradeoff = st.text_area(
             "When choosing between more money and better work-life balance, where do you usually lean? What might change your mind?",
             value=st.session_state.user_data["behavioral"]["compensation_lifestyle_tradeoff"],
             placeholder="Consider the pay difference, hours, flexibility, family needs, health, and long-term goals...",
-            height=100
+            height=100,
+            help="There is no preferred answer. Explain the circumstances or trade-offs that would affect your choice.",
         )
 
         meaningful_tradeoff_example = st.text_area(
             "Describe another important choice where you had to trade one benefit for another. What did you choose, and why?",
             value=st.session_state.user_data["behavioral"]["meaningful_tradeoff_example"],
             placeholder="A real example helps distinguish what you say you value from what guided a decision...",
-            height=100
+            height=100,
+            help="Use a real example and say what you gave up, what you gained, and which value mattered most.",
         )
 
         c1, c2 = st.columns([1, 1])
@@ -387,26 +412,30 @@ elif st.session_state.step == 3:
         top_skills_input = st.text_input(
             "Current Top Skills (comma-separated):",
             value=st.session_state.user_data["skills_and_goals"]["top_skills"],
-            placeholder="Python, Public Speaking, Product Management, Financial Modeling, UI Design"
+            placeholder="Python, Public Speaking, Product Management, Financial Modeling, UI Design",
+            help="List skills you can currently demonstrate; include technical, communication, and leadership skills.",
         )
 
         hobbies_input = st.text_input(
             "Hobbies & Organic Passions (comma-separated):",
             value=st.session_state.user_data["skills_and_goals"]["hobbies_passions"],
-            placeholder="Rock climbing, Chess, Open-source contributions, Creative writing, Electronics tinkering"
+            placeholder="Rock climbing, Chess, Open-source contributions, Creative writing, Electronics tinkering",
+            help="Include activities you enjoy or subjects you explore voluntarily, even if they are not job-related.",
         )
 
         lifestyle_input = st.text_input(
             "Desired Work-Life Balance & Lifestyle Targets:",
             value=st.session_state.user_data["skills_and_goals"]["target_salary_or_lifestyle"],
-            placeholder="e.g., Remote-first, high autonomy, 40 hrs/week max, target $120k+ compensation"
+            placeholder="e.g., Remote-first, high autonomy, 40 hrs/week max, target $120k+ compensation",
+            help="Mention priorities such as location, schedule, flexibility, compensation, travel, or time outside work.",
         )
 
         vision_input = st.text_area(
             "Where do you envision yourself in 5 years? (Life & Career)",
             value=st.session_state.user_data["skills_and_goals"]["five_year_vision"],
             placeholder="e.g., Leading a technical product or running my own specialized agency with location freedom...",
-            height=100
+            height=100,
+            help="Describe the kind of work, responsibility, lifestyle, or personal milestones you hope to have reached.",
         )
 
         c1, c2 = st.columns([1, 1])
@@ -462,7 +491,8 @@ elif st.session_state.step == 4:
     report = st.session_state.analysis_report
 
     # --- Render Synthesis ---
-    st.markdown(f"### Archetype: **{report.personality_archetype}**")
+    st.markdown(f"### Personality type: **{report.personality_archetype}**")
+    st.caption("A broad, non-clinical shorthand based on your self-reported traits and work preferences.")
     st.info(report.personality_summary)
 
     col_str, col_blind = st.columns(2)

@@ -11,6 +11,7 @@ Guidelines:
 5. Compare each primary psychometric rating with its differently worded consistency-check rating. Treat disagreements as useful context or situational nuance; do not assume either answer is wrong.
 6. Interpret the Big Five trait scores as broad self-reported tendencies, not diagnoses or fixed labels. Higher emotional stability means fewer stress/worry responses after reverse-scoring.
 7. Use past job choices and real trade-off examples as evidence of demonstrated priorities. Do not judge the user's choices or assume that one universal pay-versus-balance answer is best.
+8. Give the personality_archetype a memorable, concise personality type name grounded in the Big Five scores and work preferences. Base the personality summary and career-fit reasoning on the full profile, not just the archetype name; do not present the name as a clinical or fixed identity.
 """
 
 def format_user_prompt(profile: UserProfilePayload) -> str:
